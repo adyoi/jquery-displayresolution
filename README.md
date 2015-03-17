@@ -11,3 +11,7 @@ Simple Helper for Web Designer
 		width		: 300
 		
 	});
+
+# Download
+
+<a href="https://github.com/adyoi/jquery.resolution/archive/master.zip" target="_blank">Here</a>
