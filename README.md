@@ -1,7 +1,7 @@
 # jquery.resolution
 Simple Helper for Web Designer
 
-Demo : <a href="http://jsfiddle.net/adyoi/3jnfh4ue/" target="_blank">http://jsfiddle.net/adyoi/3jnfh4ue/</a>
+Demo : <a href="http://adyoi.com/demo/jquery.resolution/" target="_blank">http://adyoi.com/demo/jquery.resolution/</a>
 
 # How to use ?
 
