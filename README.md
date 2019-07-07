@@ -1,4 +1,4 @@
-# jquery.resolution
+# Jquery.Resolution
 Simple Helper for Web Designer
 
 Demo : <a href="https://jsfiddle.net/adyoi/3jnfh4ue/" target="_blank">https://jsfiddle.net/adyoi/3jnfh4ue/</a>
