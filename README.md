@@ -6,9 +6,9 @@ Demo : <a href="https://jsfiddle.net/adyoi/3jnfh4ue/" target="_blank">https://js
 # How to use ?
 
 	$('#resolution').displayresolution({
-    		sep		: " | ",
-    		font		: "Arial",
-    		size		: "12px",
+		sep		: " | ",
+		font		: "Arial",
+		size		: "12px",
 		color		: "#fff",
 		background	: "#000",
 		width		: 300,
