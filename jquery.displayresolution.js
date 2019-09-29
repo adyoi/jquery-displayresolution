@@ -1,5 +1,3 @@
-(function(window, $){
-
 // Jquery Display Resolution
 // Created and Design by Adi Apriyanto
 // Tangerang Selatan, 8 July 2019 | 2:25 AM
@@ -62,4 +60,3 @@ $temp.remove();
 $(t).text('copied');
 });
 };
-}(window, jQuery));
