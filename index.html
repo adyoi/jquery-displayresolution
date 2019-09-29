@@ -1,24 +1,46 @@
 <!doctype html>
+<!--
+    // Jquery Display Resolution
+    // Created and Design by Adi Apriyanto
+    // Tangerang Selatan, 17 March 2015 | 8:50 AM
+    // https://github.com/adyoi/Jquery-Display-Resolution
+-->
 <html>
+
 <head>
-<title>JQuery Resolution</title>
-<script type="text/javascript" src="jquery-1.11.2.min.js"></script>
-<script type="text/javascript" src="jquery.resolution.js"></script>
-<script type="text/javascript">
-$(document).ready(function (){
-	$('#resolution').resolution({
-		opacity				: 0.5,
-		color				: "white",
-		background			: "red",
-		width				: 500
-	});
-});
-</script>
+    <title>Jquery Display Resolution</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.displayresolution.js"></script>
+    <style>
+        #wrap {
+            height: 9999px;
+            margin-top: 99px;
+            text-align: center;
+        }
+    </style>
 </head>
-<body style="height:9999px;margin-top:99px;text-align:center;">
-	<div id="resolution"></div>
-	<h1>PLEASE SCROLL OR RESIZE BROWSER<h1>
-	<h2>JQUERY RESOLUTION</h2>
-	<h3>Created by Adi Apriyanto</h3>
+
+<body>
+    <div id="wrap">
+        <div id="resolution"></div>
+        <h1>PLEASE SCROLL OR RESIZE BROWSER</h1>
+        <H4>( click to copy css )</H4>
+        <h2>JQUERY DISPLAY RESOLUTION</h2>
+        <h3>Created by Adi Apriyanto</h3>
+    </div>
 </body>
+<script>
+    $(document).ready(function () {
+        $('#resolution').displayresolution({
+            sep        : " | ",
+            font       : "Arial",
+            size       : "12px",
+            color      : "#fff",
+            background : "#000",
+            width      : 300,
+            opacity    : 0.5,
+        });
+    });
+</script>
+
 </html>
