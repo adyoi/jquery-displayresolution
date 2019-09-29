@@ -3,6 +3,7 @@
     "description": "Simple Helper for Web Designer",
     "extra": {
         "branch-alias": {
+            "license": "MIT",
             "dev-master": "1.0.x-dev"
         }
     }
