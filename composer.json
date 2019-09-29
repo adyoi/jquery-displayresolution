@@ -1,4 +1,9 @@
 {
     "name": "adyoi/jquery-displayresolution",
-    "description": "Simple Helper for Web Designer"
+    "description": "Simple Helper for Web Designer",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
 }
