@@ -2,16 +2,18 @@
 // Created and Design by Adi Apriyanto
 // Tangerang Selatan, 8 July 2019 | 2:25 AM
 
+'use strict';
+
 $.fn.displayresolution = function(options){
-var t = this;
-var w = $(window);
-var s = $.extend({
+let t = this;
+let w = $(window);
+let s = $.extend({
 background: "black",
 color: "white",
 opacity: 0.5,
 width: 300
 }, options);
-var o = $.extend({
+let o = $.extend({
 font: "Helvetica",
 size: "12px",
 sep: " | ",
@@ -50,7 +52,7 @@ $(t).text('Scroll Top: ' + w.scrollTop() + o.sep +
 'Height: ' + w.height() +' px');
 });
 $(t).click(function(e){
-var $temp = $('<input>');
+let $temp = $('<input>');
 $('body').append($temp);
 $temp.val('top: ' + w.scrollTop() + "; " +
 'width: ' + w.width() + 'px' + "; " +
