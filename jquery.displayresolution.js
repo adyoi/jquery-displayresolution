@@ -1,6 +1,6 @@
 // Jquery Display Resolution
 // Created and Design by Adi Apriyanto
-// Tangerang Selatan, 8 July 2019 | 2:25 AM
+// Tangerang Selatan, 30 September 2019 | 6:32 AM
 
 'use strict';
 
