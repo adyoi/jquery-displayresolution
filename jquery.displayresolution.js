@@ -14,7 +14,7 @@ $.fn.displayresolution = function (options) {
         color: '#fff',
         opacity: 1,
         width: 300,
-        height: auto,
+        height: "auto",
         font: 'System, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         size: '14px',
         sep: ' | ',
