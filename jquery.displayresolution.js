@@ -32,12 +32,12 @@ $.fn.displayresolution = function (options) {
         .css({
             position: 'fixed',
             // Position handling based on options.position
-            // Supported: top-right, top-left, bottom-right, bottom-left, top, right, bottom, left, center
-            top: (options.position === 'center') ? '50%' : (options.position === 'top-left' || options.position === 'top-right' || options.position === 'top') ? (options.top !== undefined ? options.top : 20 + 'px') : 'auto',
-            right: (options.position === 'center') ? '50%' : (options.position === 'top-right' || options.position === 'bottom-right' || options.position === 'right') ? (options.right !== undefined ? options.right : 20 + 'px') : 'auto',
-            left: (options.position === 'center') ? '50%' : (options.position === 'top-left' || options.position === 'bottom-left' || options.position === 'left') ? (options.left !== undefined ? options.left : 'auto') : 'auto',
-            // Transform for center positioning
-            transform: (options.position === 'center') ? 'translate(-50%, -50%)' : 'none',
+            // Supported: top-right, top-left, bottom-right, bottom-left, top, right, bottom, left, top-center, bottom-center, center
+            top: (options.position === 'top-center') ? (options.top !== undefined ? options.top : 20 + 'px') : (options.position === 'bottom-center') ? 'auto' : (options.position === 'center') ? '50%' : (options.position === 'top-left' || options.position === 'top-right' || options.position === 'top') ? (options.top !== undefined ? options.top : 20 + 'px') : 'auto',
+            right: (options.position === 'bottom-center') ? '50%' : (options.position === 'center') ? '50%' : (options.position === 'top-right' || options.position === 'bottom-right' || options.position === 'right') ? (options.right !== undefined ? options.right : 20 + 'px') : 'auto',
+            left: (options.position === 'bottom-center') ? '50%' : (options.position === 'center') ? '50%' : (options.position === 'top-left' || options.position === 'bottom-left' || options.position === 'left') ? (options.left !== undefined ? options.left : 'auto') : 'auto',
+            // Transform for positioning
+            transform: (options.position === 'top-center') ? 'translateX(-50%)' : (options.position === 'bottom-center') ? 'translateX(-50%)' : (options.position === 'center') ? 'translate(-50%, -50%)' : 'none',
             zIndex: 999999,
             padding: options.padding + 'px',
             fontFamily: options.font,
