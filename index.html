@@ -93,6 +93,9 @@
             background: #4f46e5;
         }
 
+        .options-demo.expanded { display: block !important; }
+        .options-demo:not(.expanded) { display: none; }
+
         .resolution-box {
             position: fixed;
             top: 20px;
@@ -192,6 +195,8 @@
             </div>
 
             <button class="btn-demo" id="runDemo">Run Demo</button>
+                <button class="btn-demo" id="viewSettings" style="background: #6c757d; margin-left: 0.5rem;">View Settings</button>
+            </div>
         </div>
 
         <div class="resolution-box" id="resolution">
@@ -242,6 +247,12 @@
                     position: 'top-right',
                     opacity: 0.95
                 });
+            });
+
+            // View Settings button toggle
+            $('#viewSettings').on('click', function () {
+                $('.options-demo').toggleClass('expanded');
+                $(this).text($(this).text() === 'View Settings' ? 'Hide Settings' : 'View Settings');
             });
         });
     </script>
