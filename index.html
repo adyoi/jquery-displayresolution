@@ -172,6 +172,20 @@
             </div>
 
             <div class="option-row">
+                <span class="option-label">Position</span>
+                <select class="option-input" id="position">
+                    <option value="top-right" >Top Right (default)</option>
+                    <option value="top-left">Top Left</option>
+                    <option value="bottom-right">Bottom Right</option>
+                    <option value="bottom-left">Bottom Left</option>
+                    <option value="top">Top</option>
+                    <option value="right">Right</option>
+                    <option value="bottom">Bottom</option>
+                    <option value="left">Left</option>
+                </select>
+            </div>
+
+            <div class="option-row">
                 <span class="option-label">Width</span>
                 <input type="number" class="option-input" id="width" value="300" min="100" max="500">
             </div>
@@ -198,17 +212,19 @@
                 size: $('#size').val(),
                 background: $('#bg').val(),
                 width: $('#width').val(),
+                position: $('#position').val(),
                 opacity: 0.8
             });
 
             // Update plugin on option change
-            $('#sep, #font, #size, #bg, #width').on('change', function () {
+            $('#sep, #font, #size, #bg, #width, #position').on('change', function () {
                 $('#resolution').displayresolution('destroy').displayresolution({
                     sep: $('#sep').val(),
                     font: $('#font').val(),
                     size: $('#size').val(),
                     background: $('#bg').val(),
                     width: $('#width').val(),
+                    position: $('#position').val(),
                     opacity: 0.8
                 });
             });
@@ -222,6 +238,7 @@
                     background: 'rgba(99, 102, 241, 0.9)',
                     color: '#fff',
                     width: 350,
+                    position: 'top-right',
                     opacity: 0.95
                 });
             });

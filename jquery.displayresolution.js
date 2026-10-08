@@ -21,7 +21,8 @@ $.fn.displayresolution = function (options) {
         padding: 12,
         borderRadius: 8,
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-        transition: 'all 0.3s ease'
+        transition: 'all 0.3s ease',
+        position: 'top-right'  // new default position
     };
 
     options = $.extend({}, defaults, options);
@@ -30,9 +31,11 @@ $.fn.displayresolution = function (options) {
     const $resolution = $('<div>')
         .css({
             position: 'fixed',
-            top: options.top !== undefined ? options.top : 20,
-            right: options.right !== undefined ? options.right : 20,
-            left: options.left !== undefined ? options.left : 'auto',
+            // Position handling based on options.position
+            // Supported: top-right, top-left, bottom-right, bottom-left, top, right, bottom, left
+            top: (options.position === 'top-left' || options.position === 'top-right' || options.position === 'top') ? (options.top !== undefined ? options.top : 20 + 'px') : 'auto',
+            right: (options.position === 'top-right' || options.position === 'bottom-right' || options.position === 'right') ? (options.right !== undefined ? options.right : 20 + 'px') : 'auto',
+            left: (options.position === 'top-left' || options.position === 'bottom-left' || options.position === 'left') ? (options.left !== undefined ? options.left : 'auto') : 'auto',
             zIndex: 999999,
             padding: options.padding + 'px',
             fontFamily: options.font,
