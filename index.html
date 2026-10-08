@@ -240,11 +240,15 @@
                 background: $('#bg').val(),
                 width: $('#width').val(),
                 position: $('#position').val(),
-                opacity: 0.8
+                opacity: $('#opacity').val(),
+                height: $('#height').val(),
+                borderRadius: $('#borderRadius').val(),
+                boxShadow: $('#boxShadow').val(),
+                transition: $('#transition').val()
             });
 
             // Update plugin on option change
-            $('#sep, #font, #size, #bg, #width, #position').on('change', function () {
+            $('#sep, #font, #size, #bg, #width, #position, #opacity, #height, #borderRadius, #boxShadow, #transition').on('change', function () {
                 $('#resolution').displayresolution('destroy').displayresolution({
                     sep: $('#sep').val(),
                     font: $('#font').val(),
@@ -252,7 +256,11 @@
                     background: $('#bg').val(),
                     width: $('#width').val(),
                     position: $('#position').val(),
-                    opacity: 0.8
+                    opacity: $('#opacity').val(),
+                    height: $('#height').val(),
+                    borderRadius: $('#borderRadius').val(),
+                    boxShadow: $('#boxShadow').val(),
+                    transition: $('#transition').val()
                 });
             });
 
@@ -266,7 +274,11 @@
                     color: '#fff',
                     width: 350,
                     position: 'top-right',
-                    opacity: 0.95
+                    opacity: 0.95,
+                    height: 'auto',
+                    borderRadius: 8,
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                    transition: 'all 0.3s ease'
                 });
             });
 
