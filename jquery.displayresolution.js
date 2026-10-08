@@ -24,7 +24,7 @@ $.fn.displayresolution = function (options) {
         transition: 'all 0.3s ease'
     };
 
-    const options = $.extend({}, defaults, options);
+    options = $.extend({}, defaults, options);
 
     // Create the resolution display element
     const $resolution = $('<div>')
