@@ -1,46 +1,231 @@
 <!doctype html>
-<!--
-    // Jquery Display Resolution
-    // Created and Design by Adi Apriyanto
-    // Tangerang Selatan, 30 September 2019 | 6:32 AM
-    // https://github.com/adyoi/Jquery-Display-Resolution
--->
-<html>
-
+<html lang="id">
 <head>
-    <title>Jquery Display Resolution</title>
-    <script type="text/javascript" src="jquery-3.4.1.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Display Resolution - Modernized</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="jquery.displayresolution.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
     <style>
-        #wrap {
-            height: 9999px;
-            margin-top: 99px;
-            text-align: center;
+        :root {
+            --primary: #6366f1;
+            --bg: #f8f9fa;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .description {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .options-demo {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .option-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .option-label {
+            min-width: 120px;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .option-input {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .option-input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .btn-demo {
+            padding: 0.75rem 1.5rem;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn-demo:hover {
+            background: #4f46e5;
+        }
+
+        .resolution-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999999;
+            padding: 12px 24px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 200px;
+        }
+
+        .resolution-box:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .resolution-box.copied {
+            background: #10b981;
+        }
+
+        .footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 640px) {
+            .resolution-box {
+                top: 10px;
+                right: 10px;
+                padding: 8px 16px;
+                font-size: 12px;
+                min-width: 150px;
+            }
         }
     </style>
 </head>
-
 <body>
-    <div id="wrap">
-        <div id="resolution"></div>
-        <h1>PLEASE SCROLL OR RESIZE BROWSER</h1>
-        <H4>( click to copy css )</H4>
-        <h2>JQUERY DISPLAY RESOLUTION</h2>
-        <h3>Created by Adi Apriyanto</h3>
-    </div>
-</body>
-<script>
-    $(document).ready(function () {
-        $('#resolution').displayresolution({
-            sep        : " | ",
-            font       : "Arial",
-            size       : "12px",
-            color      : "#fff",
-            background : "#000",
-            width      : 300,
-            opacity    : 0.5,
-        });
-    });
-</script>
+    <div class="demo-container">
+        <h1>jQuery Display Resolution</h1>
+        <p class="description">
+            Modernized jQuery plugin untuk menampilkan resolusi layar, scroll position, dan dimensi browser.
+            Klik pada widget untuk menyalin informasi CSS.
+        </p>
 
+        <div class="options-demo">
+            <h3>Demo Options</h3>
+            
+            <div class="option-row">
+                <span class="option-label">Separator</span>
+                <input type="text" class="option-input" id="sep" value=" | " placeholder=" | ">
+            </div>
+
+            <div class="option-row">
+                <span class="option-label">Font</span>
+                <input type="text" class="option-input" id="font" value="system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif" placeholder="Font family">
+            </div>
+
+            <div class="option-row">
+                <span class="option-label">Size</span>
+                <input type="text" class="option-input" id="size" value="14px" placeholder="14px">
+            </div>
+
+            <div class="option-row">
+                <span class="option-label">Background</span>
+                <input type="text" class="option-input" id="bg" value="rgba(0,0,0,0.8)" placeholder="rgba(0,0,0,0.8)">
+            </div>
+
+            <div class="option-row">
+                <span class="option-label">Width</span>
+                <input type="number" class="option-input" id="width" value="300" min="100" max="500">
+            </div>
+
+            <button class="btn-demo" id="runDemo">Run Demo</button>
+        </div>
+
+        <div class="resolution-box" id="resolution">
+            <!-- Will be filled by jQuery plugin -->
+        </div>
+
+        <footer class="footer">
+            <p>Demonstrasi penggunaan jQuery displayresolution plugin</p>
+            <p>Dibuat untuk modernisasi dan optimasi</p>
+        </footer>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize the plugin with demo options
+            $('#resolution').displayresolution({
+                sep: $('#sep').val(),
+                font: $('#font').val(),
+                size: $('#size').val(),
+                background: $('#bg').val(),
+                width: $('#width').val(),
+                opacity: 0.8
+            });
+
+            // Update plugin on option change
+            $('#sep, #font, #size, #bg, #width').on('change', function () {
+                $('#resolution').displayresolution('destroy').displayresolution({
+                    sep: $('#sep').val(),
+                    font: $('#font').val(),
+                    size: $('#size').val(),
+                    background: $('#bg').val(),
+                    width: $('#width').val(),
+                    opacity: 0.8
+                });
+            });
+
+            // Run demo button
+            $('#runDemo').on('click', function () {
+                $('#resolution').displayresolution({
+                    sep: ' | ',
+                    font: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                    size: '14px',
+                    background: 'rgba(99, 102, 241, 0.9)',
+                    color: '#fff',
+                    width: 350,
+                    opacity: 0.95
+                });
+            });
+        });
+    </script>
+</body>
 </html>

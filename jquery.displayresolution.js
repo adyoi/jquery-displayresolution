@@ -1,64 +1,144 @@
 // Jquery Display Resolution
-// Created and Design by Adi Apriyanto
-// Tangerang Selatan, 30 September 2019 | 6:32 AM
+// Modernized and optimized by AI
+// Based on original by Adi Apriyanto
 
 'use strict';
 
 $.fn.displayresolution = function (options) {
-    let t = this;
-    let w = $(window);
-    let s = $.extend({
-        background: "black",
-        color: "white",
-        opacity: 0.5,
-        width: 300
-    }, options);
-    let o = $.extend({
-        font: "Helvetica",
-        size: "12px",
-        sep: " | ",
-    }, options);
-    t.css({
-        top: 0,
-        right: 0,
-        left: 0,
-        padding: 6,
-        zIndex: 999999,
-        marginRight: "auto",
-        marginLeft: "auto",
-        textAlign: "center",
-        position: "fixed",
-        opacity: s.opacity,
-        width: s.width,
-        'font-family': o.font,
-        'font-size': o.size,
-        background: s.background,
-        color: s.color,
-        cursor: "pointer"
+    const $container = this;
+    const $window = $(window);
+
+    // Default options with modern defaults
+    const defaults = {
+        background: 'rgba(0, 0, 0, 0.8)',
+        color: '#fff',
+        opacity: 1,
+        width: 300,
+        height: auto,
+        font: 'System, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        size: '14px',
+        sep: ' | ',
+        padding: 12,
+        borderRadius: 8,
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        transition: 'all 0.3s ease'
+    };
+
+    const options = $.extend({}, defaults, options);
+
+    // Create the resolution display element
+    const $resolution = $('<div>')
+        .css({
+            position: 'fixed',
+            top: options.top !== undefined ? options.top : 20,
+            right: options.right !== undefined ? options.right : 20,
+            left: options.left !== undefined ? options.left : 'auto',
+            zIndex: 999999,
+            padding: options.padding + 'px',
+            fontFamily: options.font,
+            fontSize: options.size,
+            background: options.background,
+            color: options.color,
+            cursor: 'pointer',
+            borderRadius: options.borderRadius + 'px',
+            boxShadow: options.boxShadow,
+            transition: options.transition,
+            userSelect: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+        })
+        .text('Loading...');
+
+    $container.empty().append($resolution);
+
+    // Function to update display
+    const updateDisplay = () => {
+        const scrollTop = $window.scrollTop();
+        const width = $window.width();
+        const height = $window.height();
+
+        $resolution.text(
+            'Scroll Top: ' + scrollTop + options.sep +
+            'Width: ' + width + ' px' + options.sep +
+            'Height: ' + height + ' px'
+        );
+    };
+
+    // Initial update
+    updateDisplay();
+
+    // Event listeners
+    $window.on('scroll.displayResolution resize.displayResolution', () => {
+        updateDisplay();
     });
-    t.each(function () {
-        $(t).text('Scroll Top: ' + w.scrollTop() + o.sep +
-            'Width: ' + w.width() + ' px' + o.sep +
-            'Height: ' + w.height() + ' px');
-    });
-    w.scroll(function () {
-        $(t).text('Scroll Top: ' + w.scrollTop() + o.sep +
-            'Width: ' + w.width() + ' px' + o.sep +
-            'Height: ' + w.height() + ' px');
-    });
-    w.resize(function () {
-        $(t).text('Scroll Top: ' + w.scrollTop() + o.sep +
-            'Width: ' + w.width() + ' px' + o.sep +
-            'Height: ' + w.height() + ' px');
-    });
-    $(t).click(function (e) {
-        let $temp = $('<input>');
+
+    // Click to copy functionality
+    $resolution.on('click', function (e) {
+        const text = 'scroll-top: ' + $window.scrollTop() + '; ' +
+            'width: ' + $window.width() + 'px; ' +
+            'height: ' + $window.height() + 'px; ';
+
+        const $temp = $('<input>');
         $('body').append($temp);
-        $temp.val('top: ' + w.scrollTop() + "; " +
-            'width: ' + w.width() + 'px' + "; " +
-            'height: ' + w.height() + 'px' + "; ").select();
+        $temp.val(text).select();
         document.execCommand('copy');
         $temp.remove();
-        $(t).text('copied');
+
+        // Visual feedback
+        $(this).text('Copied!');
+        setTimeout(() => {
+            updateDisplay();
+        }, 2000);
     });
+
+    // Return for chaining
+    return $container;
 };
+
+// jQuery-free vanilla alternative (auto-initialized if jQuery not available)
+if (typeof jQuery === 'undefined') {
+    document.addEventListener('DOMContentLoaded', () => {
+        const element = document.getElementById('resolution');
+        if (element) {
+            element.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 999999;
+                padding: 12px;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                font-size: 14px;
+                background: rgba(0, 0, 0, 0.8);
+                color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                cursor: pointer;
+                user-select: none;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            `;
+
+            const update = () => {
+                element.textContent = `Scroll Top: ${window.scrollTop()} | Width: ${window.innerWidth} px | Height: ${window.innerHeight} px`;
+            };
+
+            update();
+            window.addEventListener('scroll', update);
+            window.addEventListener('resize', update);
+
+            element.addEventListener('click', () => {
+                const text = `scroll-top: ${window.scrollTop()}; width: ${window.innerWidth}px; height: ${window.innerHeight}px;`;
+                const $temp = document.createElement('input');
+                document.body.appendChild($temp);
+                $temp.value = text;
+                $temp.select();
+                document.execCommand('copy');
+                document.body.removeChild($temp);
+                element.textContent = 'Copied!';
+                setTimeout(() => update(), 2000);
+            });
+        }
+    });
+}
