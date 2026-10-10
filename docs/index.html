@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="jQuery Display Resolution — floating viewport & screen inspector widget with copy-to-clipboard support.">
+    <meta name="theme-color" content="#05070f">
+    <title>jQuery Display Resolution — Futuristic Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="jquery.displayresolution.js?v=2.1.0"></script>
+    <style>
+        :root {
+            --bg: #05070f;
+            --panel: rgba(13, 20, 38, 0.55);
+            --panel-border: rgba(148, 163, 184, 0.14);
+            --text: #e6edf7;
+            --muted: #8b98b3;
+            --cyan: #22d3ee;
+            --violet: #8b5cf6;
+            --green: #34d399;
+            --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            --sans: "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            overflow-x: hidden;
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
+            pointer-events: none;
+        }
+
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        .orb-a {
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, #0ea5e9, transparent 70%);
+            top: -160px;
+            right: -120px;
+            animation: drift 18s ease-in-out infinite alternate;
+        }
+
+        .orb-b {
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, #7c3aed, transparent 70%);
+            bottom: -140px;
+            left: -120px;
+            animation: drift 22s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes drift {
+            from { transform: translate(0, 0); }
+            to { transform: translate(-40px, 40px); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .bg-orb { animation: none; }
+        }
+
+        .page {
+            position: relative;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 4rem;
+        }
+
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2.5rem;
+        }
+
+        .brand { display: flex; gap: 1rem; align-items: center; }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .grad {
+            background: linear-gradient(90deg, var(--cyan), var(--violet));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .tagline {
+            margin: 0.35rem 0 0;
+            color: var(--muted);
+            font-size: 0.95rem;
+            max-width: 52ch;
+        }
+
+        .badges { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+        .badge {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            padding: 0.3rem 0.65rem;
+            border-radius: 999px;
+            background: rgba(34, 211, 238, 0.12);
+            color: var(--cyan);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+        }
+
+        .badge--outline {
+            background: transparent;
+            color: var(--muted);
+            border-color: var(--panel-border);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .layout .panel-options { order: 1; }
+        .layout .panel-preview { order: 2; }
+
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 18px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 20px 60px rgba(2, 6, 18, 0.5);
+            overflow: hidden;
+        }
+
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.1rem 1.4rem;
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        .panel-head h2 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .hint { color: var(--muted); font-size: 0.78rem; }
+        .hint code { font-family: var(--mono); color: var(--cyan); font-size: 0.72rem; }
+
+        .panel-body { padding: 1.4rem; }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0 1.5rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .stat {
+            padding: 1rem 1.2rem;
+            border-radius: 14px;
+            background: rgba(2, 6, 18, 0.4);
+            border: 1px solid var(--panel-border);
+        }
+
+        .stat .k {
+            display: block;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .stat .v {
+            font-family: var(--mono);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--cyan);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .code {
+            margin: 0;
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            background: rgba(2, 6, 18, 0.6);
+            border: 1px solid var(--panel-border);
+            overflow-x: auto;
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            line-height: 1.65;
+            color: #a5f3fc;
+        }
+
+        .code-block { position: relative; }
+
+        .code-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 0.6rem;
+        }
+
+        .option-row {
+            display: grid;
+            grid-template-columns: 132px 1fr;
+            gap: 0.9rem;
+            align-items: center;
+            margin-bottom: 0.9rem;
+        }
+
+        .option-label {
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .option-input {
+            width: 100%;
+            padding: 0.55rem 0.75rem;
+            background: rgba(2, 6, 18, 0.55);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .option-input:focus {
+            outline: none;
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
+        }
+
+        select.option-input {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238b98b3' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            padding-right: 2rem;
+        }
+
+        input[type="number"].option-input { -moz-appearance: textfield; }
+
+        .check-row {
+            display: flex;
+            gap: 0.7rem;
+            align-items: center;
+            margin-bottom: 0.9rem;
+        }
+
+        .check-row input {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 36px;
+            height: 20px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.25);
+            border: none;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex: none;
+        }
+
+        .check-row input::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .check-row input:checked {
+            background: linear-gradient(90deg, var(--cyan), var(--violet));
+        }
+
+        .check-row input:checked::after {
+            transform: translateX(16px);
+            background: #fff;
+        }
+
+        .check-row .option-label { margin: 0; }
+
+        .btn {
+            padding: 0.6rem 1.1rem;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            font-family: var(--sans);
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        .btn--primary {
+            background: linear-gradient(90deg, var(--cyan), var(--violet));
+            color: #04060f;
+            box-shadow: 0 4px 20px rgba(34, 211, 238, 0.25);
+        }
+
+        .btn--primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 28px rgba(139, 92, 246, 0.35);
+        }
+
+        .btn--ghost {
+            background: transparent;
+            border-color: var(--panel-border);
+            color: var(--muted);
+        }
+
+        .btn--ghost:hover {
+            color: var(--text);
+            border-color: rgba(148, 163, 184, 0.35);
+        }
+
+        .btn--ghost.active {
+            background: linear-gradient(90deg, var(--cyan), var(--violet));
+            border-color: transparent;
+            color: #04060f;
+        }
+
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 1.2rem;
+        }
+
+        .scroll-zone {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+
+        .scroll-word {
+            font-size: clamp(2rem, 8vw, 5rem);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            white-space: nowrap;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(148, 163, 184, 0.25);
+        }
+
+        .site-footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--panel-border);
+            color: var(--muted);
+            font-size: 0.82rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .site-footer a { color: var(--cyan); text-decoration: none; }
+        .site-footer a:hover { text-decoration: underline; }
+
+        #resolution .jquery-displayresolution { font-variant-numeric: tabular-nums; }
+
+        #resolution .jquery-displayresolution:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
+        }
+
+        #resolution .displayresolution-copied {
+            color: var(--green) !important;
+            box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.45), 0 12px 40px rgba(52, 211, 153, 0.2) !important;
+        }
+
+        @media (max-width: 640px) {
+            .page { padding: 2rem 1rem 3rem; }
+            .stats { grid-template-columns: 1fr; }
+            .options-grid { grid-template-columns: 1fr; }
+            .option-row { grid-template-columns: 1fr; gap: 0.4rem; margin-bottom: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-orb orb-a" aria-hidden="true"></div>
+    <div class="bg-orb orb-b" aria-hidden="true"></div>
+
+    <div class="page">
+        <header class="site-header">
+            <div class="brand">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                    <rect x="4" y="6" width="32" height="22" rx="5" stroke="url(#g)" stroke-width="2"/>
+                    <path d="M14 33h12M20 28v5" stroke="url(#g)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M12 12l-3 3 3 3M28 12l3 3-3 3" stroke="url(#g)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="g" x1="0" y1="0" x2="40" y2="40">
+                            <stop stop-color="#22d3ee"/>
+                            <stop offset="1" stop-color="#8b5cf6"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div>
+                    <h1>jQuery <span class="grad">Display Resolution</span></h1>
+                    <p class="tagline">Floating viewport &amp; screen inspector. Klik widget untuk menyalin nilai CSS.</p>
+                </div>
+            </div>
+            <div class="badges">
+                <span class="badge">v2.1.0</span>
+                <span class="badge badge--outline">jQuery 3.7.1</span>
+                <span class="badge badge--outline">UMD</span>
+            </div>
+        </header>
+
+        <main class="layout">
+            <section class="panel panel-preview" aria-label="Live preview">
+                <div class="panel-head">
+                    <h2>Live Preview</h2>
+                    <span class="hint">Widget <code>position: fixed</code> — coba scroll &amp; resize</span>
+                </div>
+                <div class="panel-body">
+                    <div class="stats">
+                        <div class="stat">
+                            <span class="k">Viewport</span>
+                            <span class="v" id="statViewport">—</span>
+                        </div>
+                        <div class="stat">
+                            <span class="k">Screen</span>
+                            <span class="v" id="statScreen">—</span>
+                        </div>
+                        <div class="stat">
+                            <span class="k">Device Pixel Ratio</span>
+                            <span class="v" id="statDpr">—</span>
+                        </div>
+                        <div class="stat">
+                            <span class="k">Scroll Y</span>
+                            <span class="v" id="statScroll">—</span>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <pre class="code"><code id="codeSnippet"></code></pre>
+                        <div class="code-actions">
+                            <button id="copyCode" class="btn btn--ghost" type="button">Copy Code</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel panel-options" aria-label="Options">
+                <div class="panel-head">
+                    <h2>Options</h2>
+                </div>
+                <div id="settingsPanel" class="panel-body">
+                    <div class="options-grid">
+                        <div class="option-row">
+                            <span class="option-label">Separator</span>
+                            <select class="option-input" id="sep">
+                                <option value=" | " selected>| (pipe)</option>
+                                <option value=" · ">· (dot)</option>
+                                <option value=" // ">// (slash)</option>
+                                <option value=" - ">- (dash)</option>
+                                <option value=" , ">, (comma)</option>
+                                <option value=" ⏐ ">⏐ (thin bar)</option>
+                                <option value="   ">spasi</option>
+                            </select>
+                        </div>
+                        <div class="option-row">
+                            <span class="option-label">Font</span>
+                            <select class="option-input" id="font">
+                                <option value='"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace' selected>JetBrains Mono</option>
+                                <option value='system-ui, -apple-system, "Segoe UI", Roboto, sans-serif'>System UI</option>
+                                <option value='"Segoe UI", system-ui, sans-serif'>Segoe UI</option>
+                                <option value='ui-monospace, "SF Mono", Menlo, Consolas, monospace'>SF Mono</option>
+                                <option value='Georgia, "Times New Roman", serif'>Georgia (Serif)</option>
+                                <option value='"Courier New", Courier, monospace'>Courier New</option>
+                            </select>
+                        </div>
+                    <div class="option-row">
+                        <span class="option-label">Size</span>
+                        <input type="text" class="option-input" id="size" value="13px" placeholder="14px">
+                    </div>
+                    <div class="option-row">
+                        <span class="option-label">Background</span>
+                        <input type="text" class="option-input" id="bg" value="#0a0f1e" placeholder="#000000">
+                    </div>
+                    <div class="option-row">
+                        <span class="option-label">Text Color</span>
+                        <input type="text" class="option-input" id="color" value="#e2e8f0" placeholder="#fff">
+                    </div>
+                    <div class="option-row">
+                        <span class="option-label">Position</span>
+                        <select class="option-input" id="position">
+                        <option value="top-right">Top Right</option>
+                        <option value="top-left">Top Left</option>
+                        <option value="bottom-right">Bottom Right</option>
+                        <option value="bottom-left">Bottom Left</option>
+                        <option value="top-center">Top Center</option>
+                        <option value="bottom-center" selected>Bottom Center</option>
+                            <option value="center">Center</option>
+                            <option value="top">Top</option>
+                            <option value="right">Right</option>
+                            <option value="bottom">Bottom</option>
+                            <option value="left">Left</option>
+                        </select>
+                    </div>
+                    <div class="option-row">
+                        <span class="option-label">Width (px)</span>
+                        <input type="number" class="option-input" id="width" value="420" min="100" max="600">
+                    </div>
+                    <div class="option-row">
+                        <span class="option-label">Height</span>
+                        <input type="text" class="option-input" id="height" value="auto" placeholder="auto">
+                    </div>
+                    <div class="option-row">
+                        <span class="option-label">Opacity</span>
+                        <input type="number" class="option-input" id="opacity" min="0" max="1" step="0.05" value="1">
+                    </div>
+                    <div class="option-row">
+                        <span class="option-label">Padding (px)</span>
+                        <input type="number" class="option-input" id="padding" min="0" max="40" value="12">
+                    </div>
+                    <div class="option-row">
+                        <span class="option-label">Margin (px)</span>
+                        <input type="number" class="option-input" id="margin" min="0" max="40" value="12">
+                    </div>
+                    <div class="option-row">
+                        <span class="option-label">Border Radius</span>
+                        <input type="number" class="option-input" id="borderRadius" min="0" value="14">
+                    </div>
+                    </div>
+                    <div class="check-row">
+                        <input type="checkbox" id="screen">
+                        <span class="option-label">Screen Resolution</span>
+                    </div>
+                    <div class="check-row">
+                        <input type="checkbox" id="dpr">
+                        <span class="option-label">Device Pixel Ratio</span>
+                    </div>
+                    <div class="btn-row">
+                        <button class="btn btn--ghost active" data-preset="futuristic" id="presetFuturistic" type="button">Futuristic</button>
+                        <button class="btn btn--ghost" data-preset="neon" id="presetNeon" type="button">Neon</button>
+                        <button class="btn btn--ghost" data-preset="minimal" id="presetMinimal" type="button">Minimal</button>
+                        <button class="btn btn--ghost" data-preset="terminal" id="presetTerminal" type="button">Terminal</button>
+                        <button class="btn btn--ghost" data-preset="sunset" id="presetSunset" type="button">Sunset</button>
+                        <button class="btn btn--ghost" id="resetDemo" type="button">Reset</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <section class="scroll-zone" aria-hidden="true">
+            <div class="scroll-word">SCROLL&nbsp;·&nbsp;RESIZE&nbsp;·&nbsp;INSPECT</div>
+        </section>
+
+        <footer class="site-footer">
+            <p>Demonstrasi jQuery Display Resolution — widget terpasang di pojok kanan atas.</p>
+            <p><a href="https://github.com/adyoi/jquery-displayresolution">Repository</a> · MIT License</p>
+        </footer>
+    </div>
+
+    <div id="resolution"></div>
+
+    <script>
+        (function () {
+            var $target = $('#resolution');
+            var $presetButtons = $('[data-preset]');
+
+            function readOptions() {
+                return {
+                    sep: $('#sep').val(),
+                    font: $('#font').val(),
+                    size: $('#size').val(),
+                    background: $('#bg').val(),
+                    color: $('#color').val(),
+                    position: $('#position').val(),
+                    width: parseFloat($('#width').val()) || 300,
+                    height: $('#height').val() || 'auto',
+                    opacity: parseFloat($('#opacity').val()),
+                    padding: parseFloat($('#padding').val()),
+                    margin: parseFloat($('#margin').val()),
+                    borderRadius: parseFloat($('#borderRadius').val()),
+                    screen: $('#screen').prop('checked'),
+                    dpr: $('#dpr').prop('checked')
+                };
+            }
+
+            function render() {
+                $target.displayresolution('destroy').displayresolution(readOptions());
+                syncCodeSnippet();
+            }
+
+            var PLUGIN_DEFAULTS = {
+                sep: ' | ',
+                size: '14px',
+                background: '#000000',
+                color: '#fff',
+                opacity: 1,
+                width: 300,
+                height: 'auto',
+                padding: 12,
+                margin: 12,
+                borderRadius: 8,
+                position: 'top-right',
+                screen: false,
+                dpr: false
+            };
+
+            function syncCodeSnippet() {
+                var o = readOptions();
+                var lines = [];
+                Object.keys(PLUGIN_DEFAULTS).forEach(function (key) {
+                    if (String(o[key]) !== String(PLUGIN_DEFAULTS[key])) {
+                        lines.push(key + ': ' + JSON.stringify(o[key]));
+                    }
+                });
+                var snippet = "$('#resolution').displayresolution({\n    " +
+                    lines.join(',\n    ') +
+                    "\n});";
+                $('#codeSnippet').text(snippet);
+            }
+
+            var presets = {
+                futuristic: {
+                    sep: ' | ',
+                    font: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
+                    size: '13px',
+                    bg: '#0a0f1e',
+                    color: '#e2e8f0',
+                    position: 'bottom-center',
+                    width: '420',
+                    height: 'auto',
+                    opacity: '1',
+                    padding: '12',
+                    margin: '12',
+                    borderRadius: '14',
+                    screen: false,
+                    dpr: false
+                },
+                neon: {
+                    sep: ' // ',
+                    font: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
+                    size: '12px',
+                    bg: '#140028',
+                    color: '#f0abfc',
+                    position: 'bottom-center',
+                    width: '300',
+                    height: 'auto',
+                    opacity: '1',
+                    padding: '12',
+                    margin: '12',
+                    borderRadius: '4',
+                    screen: true,
+                    dpr: false
+                },
+                minimal: {
+                    sep: ' · ',
+                    font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+                    size: '12px',
+                    bg: '#ffffff',
+                    color: '#0f172a',
+                    position: 'bottom-center',
+                    width: '260',
+                    height: 'auto',
+                    opacity: '1',
+                    padding: '10',
+                    margin: '12',
+                    borderRadius: '8',
+                    screen: false,
+                    dpr: false
+                },
+                terminal: {
+                    sep: ' | ',
+                    font: '"Courier New", Courier, monospace',
+                    size: '12px',
+                    bg: '#000000',
+                    color: '#33ff66',
+                    position: 'bottom-center',
+                    width: '340',
+                    height: 'auto',
+                    opacity: '1',
+                    padding: '12',
+                    margin: '12',
+                    borderRadius: '0',
+                    screen: true,
+                    dpr: false
+                },
+                sunset: {
+                    sep: ' · ',
+                    font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+                    size: '13px',
+                    bg: '#2d1b4e',
+                    color: '#ffb86b',
+                    position: 'bottom-center',
+                    width: '320',
+                    height: 'auto',
+                    opacity: '1',
+                    padding: '12',
+                    margin: '12',
+                    borderRadius: '20',
+                    screen: false,
+                    dpr: true
+                }
+            };
+
+            function applyPreset(name) {
+                var p = presets[name];
+                if (!p) {
+                    return;
+                }
+                $('#sep').val(p.sep);
+                $('#font').val(p.font);
+                $('#size').val(p.size);
+                $('#bg').val(p.bg);
+                $('#color').val(p.color);
+                $('#position').val(p.position);
+                $('#width').val(p.width);
+                $('#height').val(p.height);
+                $('#opacity').val(p.opacity);
+                $('#padding').val(p.padding);
+                $('#borderRadius').val(p.borderRadius);
+                $('#screen').prop('checked', p.screen);
+                $('#dpr').prop('checked', p.dpr);
+                render();
+
+                $presetButtons.removeClass('active');
+                $presetButtons.filter('[data-preset="' + name + '"]').addClass('active');
+            }
+
+            var $statViewport = $('#statViewport');
+            var $statScreen = $('#statScreen');
+            var $statDpr = $('#statDpr');
+            var $statScroll = $('#statScroll');
+
+            function updateStats() {
+                $statViewport.text(window.innerWidth + ' × ' + window.innerHeight);
+                $statScreen.text(screen.width + ' × ' + screen.height);
+                $statDpr.text((window.devicePixelRatio || 1).toFixed(2));
+                $statScroll.text(Math.round(window.scrollY) + ' px');
+            }
+
+            $(function () {
+                render();
+                updateStats();
+
+                $('#settingsPanel').on('input change', '.option-input, input[type="checkbox"]', render);
+
+                $('.btn-row').on('click', '[data-preset]', function () {
+                    applyPreset($(this).data('preset'));
+                });
+
+                $('#resetDemo').on('click', function () { applyPreset('futuristic'); });
+
+                function legacyCopy(text) {
+                    try {
+                        var $temp = $('<textarea>')
+                            .val(text)
+                            .css({ position: 'fixed', top: '-1000px', left: '-1000px', opacity: '0' });
+                        $('body').append($temp);
+                        $temp[0].select();
+                        document.execCommand('copy');
+                        $temp.remove();
+                    } catch (err) { }
+                }
+
+                $('#copyCode').on('click', function () {
+                    var $btn = $(this);
+                    var text = $('#codeSnippet').text();
+                    var done = function () {
+                        $btn.text('Copied!');
+                        setTimeout(function () { $btn.text('Copy Code'); }, 1500);
+                    };
+                    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                        navigator.clipboard.writeText(text).then(done, function () {
+                            legacyCopy(text);
+                            done();
+                        });
+                    } else {
+                        legacyCopy(text);
+                        done();
+                    }
+                });
+
+                $(window).on('scroll resize', updateStats);
+            });
+        }());
+    </script>
+</body>
+</html>

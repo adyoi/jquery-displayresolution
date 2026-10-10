@@ -1,1 +1,39 @@
-{"name": "jquery-displayresolution", "version": "2.0.0", "description": "jQuery plugin for displaying screen resolution", "main": "js/plugins/jquery.displayresolution.js", "scripts": { "test": "echo \\"Error: no test specified" && exit 1" }, "repository": { "type": "git", "url": "git+https://github.com/adyoi/jquery-displayresolution.git" }, "keywords": ["jquery", "display", "resolution", "screen"], "author": "Adi Apriyanto", "license": "MIT"}
+{
+    "name": "jquery-displayresolution",
+    "version": "2.1.0",
+    "description": "jQuery plugin that displays viewport/screen resolution, scroll position and browser dimensions in a floating copy-to-clipboard widget",
+    "main": "jquery.displayresolution.js",
+    "files": [
+        "jquery.displayresolution.js",
+        "jquery.displayresolution.min.js",
+        "jquery.displayresolution.min.js.map",
+        "LICENSE",
+        "README.md"
+    ],
+    "scripts": {
+        "build": "terser jquery.displayresolution.js -o jquery.displayresolution.min.js -c -m --source-map url=jquery.displayresolution.min.js.map && node scripts/sync-docs.js",
+        "test": "node test/smoke.test.js && node test/min.check.js && node test/demo.check.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/adyoi/jquery-displayresolution.git"
+    },
+    "keywords": [
+        "jquery",
+        "jquery-plugin",
+        "display",
+        "resolution",
+        "screen",
+        "viewport",
+        "responsive",
+        "widget",
+        "inspector"
+    ],
+    "author": "Adi Apriyanto",
+    "license": "MIT",
+    "devDependencies": {
+        "jquery": "^3.7.1",
+        "jsdom": "^24.1.0",
+        "terser": "^5.31.0"
+    }
+}
